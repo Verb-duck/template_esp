@@ -9,10 +9,10 @@
 
 #define ssid "5G OBLUCHATEL"
 #define passwordW "00000000"
-void OTA_setup(const char* mqtt_ota_update);  /*подключение обновления по WiFi. 
-      Вставить в блок setup */
-void OTA_update();
-bool WiFi_Connected();   /* подключение в ВиФи
-    true - есть связь
-    false - нет связи*/
+bool WiFi_Connected();       // подключение в ВиФи    
+void begin_OTA_WiFi_to_IP(); // обновление по ВиФи по IP
+void OTA_begin(const char *mqtt_ota_update);// обновление прошивки, все в одном месте
+void OTA_update();           // обновление по ВиФи по IP
+
+
 #endif

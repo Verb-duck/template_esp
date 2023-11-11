@@ -1,5 +1,39 @@
+#include "WiFi_connect.h"
 
-void OTA_setup(const char *mqtt_ota_update)
+// подключение в ВиФи
+bool WiFi_Connected()
+{
+  if (WiFi.isConnected())
+  {
+    return true;
+  }
+  else
+  {
+    Serial.println();
+    Serial.println("Connection failed! Fixing");
+    // wifi connect
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(ssid, passwordW);
+    byte count_attempt = 0;
+    while (WiFi.waitForConnectResult() != WL_CONNECTED)
+    {
+      count_attempt++;
+      Serial.print("*");
+      if (count_attempt > 100)
+      {
+        Serial.println();
+        Serial.println("WiFi connection failed");
+        return false;
+      }
+    }
+    Serial.println();
+    Serial.print("WiFi connected. IP address: ");
+    Serial.println(WiFi.localIP());
+    return true;
+  }
+}
+// обновление прошивки по ВиФи по IP
+void begin_OTA_WiFi_to_IP()  
 {
   ArduinoOTA.onStart([]()
                      {
@@ -33,40 +67,13 @@ void OTA_setup(const char *mqtt_ota_update)
   ArduinoOTA.begin();
   ArduinoOTA.setPassword(passwordW);
 }
-void OTA_update()
-{
-  //обновление по ВиФи
-    ArduinoOTA.handle();    
 
-}
-bool WiFi_Connected()
+// обновление прошивки
+void OTA_begin(const char *mqtt_ota_update)
 {
-  if (WiFi.isConnected())
-  {
-    return true;
-  }
-  else
-  {
-    Serial.println();
-    Serial.println("Connection failed! Fixing");
-    // wifi connect
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, passwordW);
-    byte count_attempt = 0;
-    while (WiFi.waitForConnectResult() != WL_CONNECTED)
-    {
-      count_attempt++;
-      Serial.print("*");
-      if (count_attempt > 100)
-      {
-        Serial.println();
-        Serial.println("WiFi connection failed");
-        return false;
-      }
-    }
-    Serial.println();
-    Serial.print("WiFi connected. IP address: ");
-    Serial.println(WiFi.localIP());
-    return true;
-  }
+  begin_OTA_WiFi_to_IP(); // обновление по ВиФи
 }
+void OTA_update() 
+{ 
+  ArduinoOTA.handle(); 
+} // обновление по ВиФи по IP

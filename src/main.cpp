@@ -14,12 +14,12 @@
 void setup() {
   Serial.begin(115200);
   WiFi_Connected();
-  OTA_setup(MQTT_TOPIC_OTA);
+  OTA_begin(MQTT_TOPIC_OTA);
 }
 
 void loop() {
   WiFi_Connected();
-  OTA_update();
+  //OTA_update();
   // static int32_t timer = 0;
   // if(millis() - timer >= 1000)
   // {
